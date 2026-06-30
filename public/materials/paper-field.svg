@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Abstract paper ash material study">
+  <rect width="900" height="1100" fill="#161513"/>
+  <path d="M118 86h646l-58 920H174z" fill="#d8d0bd"/>
+  <path d="M174 136c146 42 316 38 532-4l-46 818c-150 34-322 40-438 0z" fill="#f5ecd4" opacity=".6"/>
+  <path d="M292 186c12 208 108 304 82 506-12 92-52 174-88 256" fill="none" stroke="#2d2a25" stroke-width="24" opacity=".32"/>
+  <circle cx="622" cy="372" r="138" fill="#2d2a25" opacity=".2"/>
+</svg>

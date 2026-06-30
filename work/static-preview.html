@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>light-field-spatial-lab Preview</title>
+    <style>
+      :root {
+        --void: #050608;
+        --ai: #8fc7ff;
+        --craft: #ffc16b;
+        --life: #b8d6c3;
+        --muted: rgba(247, 240, 223, 0.66);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow: hidden;
+        color: #f7f0df;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--void);
+      }
+      button { font: inherit; }
+      .app { min-height: 100vh; position: relative; overflow: hidden; }
+      .field {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.09), transparent 18rem),
+          radial-gradient(circle at 24% 28%, rgba(127,190,255,.42), transparent 19rem),
+          radial-gradient(circle at 72% 38%, rgba(255,174,89,.36), transparent 22rem),
+          radial-gradient(circle at 48% 72%, rgba(171,215,187,.30), transparent 20rem),
+          linear-gradient(135deg, #050608, #111113 48%, #070809);
+        transition: filter 700ms ease, transform 900ms ease;
+      }
+      .field::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: .08;
+        background-image:
+          linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px);
+        background-size: 46px 46px;
+        mask-image: radial-gradient(circle at center, black, transparent 72%);
+      }
+      .field::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 20%, rgba(0,0,0,.15) 58%, rgba(0,0,0,.72));
+      }
+      .caption {
+        position: absolute;
+        left: clamp(20px, 4vw, 56px);
+        bottom: clamp(20px, 5vw, 56px);
+        z-index: 5;
+        max-width: 360px;
+      }
+      .caption span {
+        display: block;
+        margin-bottom: 10px;
+        color: rgba(244,241,232,.72);
+        font-size: .78rem;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+      }
+      .caption strong {
+        display: block;
+        color: #f7f0df;
+        font-size: clamp(1.4rem, 2.7vw, 2.8rem);
+        line-height: 1.02;
+        font-weight: 500;
+      }
+      .source {
+        position: absolute;
+        z-index: 4;
+        width: clamp(118px, 16vw, 190px);
+        aspect-ratio: 1;
+        translate: -50% -50%;
+        border: 0;
+        border-radius: 999px;
+        padding: 0;
+        background: transparent;
+        color: white;
+        cursor: crosshair;
+      }
+      .source.ai { left: 24%; top: 28%; color: var(--ai); }
+      .source.craft { left: 72%; top: 38%; color: var(--craft); }
+      .source.life { left: 48%; top: 72%; color: var(--life); animation: drift 7s ease-in-out infinite alternate; }
+      @keyframes drift { from { margin: -10px 0 0 -14px; } to { margin: 12px 0 0 16px; } }
+      .core, .halo, .ring {
+        position: absolute;
+        inset: 50%;
+        translate: -50% -50%;
+        border-radius: 999px;
+        pointer-events: none;
+      }
+      .core {
+        width: 20%;
+        aspect-ratio: 1;
+        background: currentColor;
+        box-shadow: 0 0 34px currentColor;
+      }
+      .halo {
+        width: 100%;
+        aspect-ratio: 1;
+        opacity: .75;
+        background: radial-gradient(circle, currentColor 0 6%, transparent 58%);
+        filter: blur(18px);
+      }
+      .ring {
+        width: 88%;
+        aspect-ratio: 1;
+        border: 1px solid currentColor;
+        opacity: 0;
+        transform: scale(.72);
+        box-shadow: inset 0 0 26px currentColor, 0 0 30px currentColor;
+      }
+      .source:hover .ring { animation: dwell 1.45s linear forwards; }
+      @keyframes dwell { to { opacity: .9; transform: scale(1.14); } }
+      .label {
+        position: absolute;
+        left: 50%;
+        top: calc(100% + 8px);
+        display: grid;
+        gap: 4px;
+        width: min(240px, 60vw);
+        translate: -50% 8px;
+        opacity: 0;
+        text-align: center;
+        transition: 260ms ease;
+      }
+      .source:hover .label { opacity: 1; translate: -50% 0; }
+      .label span { font-size: .8rem; letter-spacing: .18em; }
+      .label small { color: rgba(247,240,223,.62); line-height: 1.3; }
+      .collapse {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: none;
+        place-items: center;
+        background: rgba(5,6,8,.66);
+      }
+      .collapse.active { display: grid; animation: fade 2.5s ease forwards; }
+      @keyframes fade { 0% { opacity: 0; } 12%, 85% { opacity: 1; } 100% { opacity: 0; } }
+      .axis {
+        width: 34vmin;
+        aspect-ratio: 1;
+        border-radius: 999px;
+        filter: blur(24px);
+        animation: collapse 2.5s cubic-bezier(.2,.84,.24,1) forwards;
+      }
+      @keyframes collapse {
+        0% { transform: scale(.2,.7); opacity: 0; }
+        28% { transform: scale(1.8,1); opacity: .9; }
+        58% { transform: scale(5.4,1.1); opacity: .9; }
+        100% { transform: scale(6,1.1); opacity: .18; }
+      }
+      .collapse.ai .axis { background: linear-gradient(90deg, transparent, rgba(143,199,255,.92), rgba(255,255,255,.9)); }
+      .collapse.craft .axis { background: radial-gradient(circle, rgba(255,220,166,.94), rgba(255,155,76,.62), transparent 62%); }
+      .collapse.life .axis { background: radial-gradient(circle, rgba(220,246,222,.78), rgba(139,181,158,.5), transparent 62%); }
+      .readout {
+        position: absolute;
+        left: clamp(22px, 4vw, 48px);
+        bottom: clamp(22px, 4vw, 48px);
+        display: grid;
+        gap: 7px;
+      }
+      .readout span { font-size: .78rem; letter-spacing: .2em; }
+      .readout strong { font-size: clamp(1.5rem, 3vw, 3.3rem); font-weight: 500; }
+      .lab {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        display: none;
+        min-height: 100vh;
+        overflow: auto;
+        padding: clamp(18px, 3vw, 36px);
+        animation: mount .72s cubic-bezier(.16,1,.3,1);
+      }
+      .lab.active { display: block; }
+      @keyframes mount { from { opacity: 0; transform: translateY(24px); filter: blur(18px); } to { opacity: 1; transform: none; filter: blur(0); } }
+      .lab.ai { background: linear-gradient(90deg, rgba(143,199,255,.11), transparent 46%), linear-gradient(180deg, #070b10, #0c0f12); }
+      .lab.craft { background: radial-gradient(circle at 70% 22%, rgba(255,193,107,.18), transparent 34rem), linear-gradient(180deg, #100d0a, #090807); }
+      .lab.life { background: radial-gradient(circle at 30% 18%, rgba(184,214,195,.16), transparent 30rem), linear-gradient(180deg, #080b09, #0d0f0c); }
+      header {
+        display: grid;
+        grid-template-columns: auto 1fr minmax(260px, 38vw);
+        gap: clamp(18px, 3vw, 42px);
+        align-items: start;
+        padding-bottom: clamp(24px, 5vw, 54px);
+      }
+      .back {
+        display: grid;
+        width: 46px;
+        aspect-ratio: 1;
+        place-items: center;
+        border: 1px solid rgba(255,255,255,.14);
+        border-radius: 999px;
+        background: rgba(255,255,255,.04);
+        cursor: pointer;
+      }
+      .back::before {
+        content: "";
+        width: 15px;
+        aspect-ratio: 1;
+        border-top: 2px solid #f7f0df;
+        border-left: 2px solid #f7f0df;
+        transform: rotate(-45deg);
+      }
+      header p, dt {
+        margin: 0;
+        color: var(--muted);
+        font-size: .76rem;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+      h1 { margin: 8px 0 0; font-size: clamp(2.4rem, 8vw, 7.4rem); line-height: .9; font-weight: 520; }
+      dl { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; margin: 0; }
+      dd { margin: 8px 0 0; color: rgba(247,240,223,.82); line-height: 1.35; }
+      .articles { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 12px; }
+      .article { grid-column: span 6; min-height: 245px; padding: 24px; border: 1px solid rgba(143,199,255,.18); background: rgba(143,199,255,.045); }
+      .article:nth-child(3) { grid-column: span 12; }
+      .meta, .tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; color: rgba(143,199,255,.78); font: .75rem ui-monospace, monospace; }
+      .article h2 { margin: 34px 0 14px; font-size: clamp(1.35rem, 2.6vw, 2.35rem); line-height: 1.05; font-weight: 540; }
+      .article p { color: var(--muted); line-height: 1.55; }
+      .materials { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: clamp(12px, 2vw, 22px); }
+      .material { position: relative; grid-column: span 4; min-height: 410px; overflow: hidden; border: 1px solid rgba(255,193,107,.16); background: rgba(255,193,107,.06); }
+      .material:nth-child(2), .material:nth-child(5) { grid-column: span 5; }
+      .material:nth-child(3) { grid-column: span 3; }
+      .material img { width: 100%; height: 100%; min-height: 410px; object-fit: cover; transition: 540ms ease; }
+      .material:hover img { transform: scale(1.07); filter: saturate(1.18) contrast(1.08); }
+      .material div { position: absolute; inset: auto 0 0; padding: 72px 20px 20px; background: linear-gradient(transparent, rgba(7,5,3,.82)); }
+      .material span { color: var(--craft); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; }
+      .material h2 { margin: 10px 0 8px; font-size: clamp(1.25rem, 2.4vw, 2.1rem); font-weight: 520; }
+      .memory { position: relative; display: grid; gap: clamp(36px, 7vw, 92px); width: min(880px,100%); margin: 0 auto; padding: 24px 0 90px; }
+      .memory::before { content: ""; position: absolute; inset: 0 auto 0 120px; width: 1px; background: linear-gradient(transparent, rgba(184,214,195,.54), transparent); }
+      .memory article { position: relative; display: grid; grid-template-columns: 150px 1fr; gap: clamp(16px,4vw,52px); max-width: 760px; }
+      .memory article::before { content: ""; position: absolute; left: 116px; top: 8px; width: 9px; aspect-ratio: 1; border-radius: 999px; background: var(--life); box-shadow: 0 0 30px rgba(184,214,195,.72); }
+      time { display: grid; gap: 8px; align-content: start; color: rgba(184,214,195,.84); font-family: Georgia, serif; }
+      .memory h2 { margin: 0; font-family: Georgia, serif; font-size: clamp(1.45rem,3vw,2.75rem); font-weight: 400; line-height: 1.04; }
+      .memory p { color: rgba(247,240,223,.66); line-height: 1.7; }
+      @media (max-width: 860px) {
+        header { grid-template-columns: 1fr; }
+        dl { grid-template-columns: 1fr; }
+        .article, .article:nth-child(3), .material, .material:nth-child(2), .material:nth-child(3), .material:nth-child(5) { grid-column: span 12; }
+        .memory::before { left: 22px; }
+        .memory article { grid-template-columns: 1fr; padding-left: 54px; }
+        .memory article::before { left: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app" id="app">
+      <section class="field" id="field">
+        <div class="caption"><span>light-field-spatial-lab</span><strong>hold near a light source to collapse the field</strong></div>
+        <button class="source ai" data-lab="ai"><span class="halo"></span><span class="core"></span><span class="ring"></span><span class="label"><span>AI LAB</span><small>Light becomes structure</small></span></button>
+        <button class="source craft" data-lab="craft"><span class="halo"></span><span class="core"></span><span class="ring"></span><span class="label"><span>CRAFT LAB</span><small>Light becomes material</small></span></button>
+        <button class="source life" data-lab="life"><span class="halo"></span><span class="core"></span><span class="ring"></span><span class="label"><span>LIFE LAB</span><small>Light becomes time</small></span></button>
+      </section>
+      <div class="collapse" id="collapse"><div class="axis"></div><div class="readout"><span id="readout-name"></span><strong>light collapse</strong></div></div>
+      <section class="lab ai" id="lab-ai"></section>
+      <section class="lab craft" id="lab-craft"></section>
+      <section class="lab life" id="lab-life"></section>
+    </main>
+    <script>
+      const field = document.getElementById("field");
+      const collapse = document.getElementById("collapse");
+      const names = { ai: "AI LAB", craft: "CRAFT LAB", life: "LIFE LAB" };
+      let dwell;
+      field.addEventListener("pointermove", (event) => {
+        field.style.setProperty("--mx", `${(event.clientX / innerWidth) * 100}%`);
+        field.style.setProperty("--my", `${(event.clientY / innerHeight) * 100}%`);
+      });
+      document.querySelectorAll(".source").forEach((source) => {
+        source.addEventListener("pointerenter", () => dwell = setTimeout(() => mount(source.dataset.lab), 1450));
+        source.addEventListener("pointerleave", () => clearTimeout(dwell));
+        source.addEventListener("click", () => mount(source.dataset.lab));
+      });
+      document.addEventListener("click", (event) => {
+        if (event.target.classList.contains("back")) home();
+      });
+      function mount(lab) {
+        clearTimeout(dwell);
+        collapse.className = `collapse ${lab} active`;
+        document.getElementById("readout-name").textContent = names[lab];
+        setTimeout(() => {
+          field.style.display = "none";
+          document.querySelectorAll(".lab").forEach((node) => node.classList.remove("active"));
+          const target = document.getElementById(`lab-${lab}`);
+          target.innerHTML = templates[lab];
+          target.classList.add("active");
+        }, 2150);
+        setTimeout(() => collapse.className = "collapse", 2600);
+      }
+      function home() {
+        document.querySelectorAll(".lab").forEach((node) => node.classList.remove("active"));
+        field.style.display = "block";
+      }
+      const header = (kind, physics) => `
+        <header><button class="back" aria-label="Return"></button><div><p>${physics}</p><h1>${kind}</h1></div>
+        </header>`;
+      const templates = {
+        ai: `${header("AI LAB","frontend development workbench")}
+          <div class="articles">
+            ${["Turning ambiguous product requests into structured implementation plans","Designing small evaluation grids for agentic interfaces","Prompt fields as operating constraints, not prose decorations"].map((t,i)=>`<article class="article"><div class="meta"><span>${i===1?"Evaluation":"Runtime Notes"}</span><span>${6+i*2} min</span></div><h2>${t}</h2><p>A structured reading surface where cold light resolves into hierarchy, metadata, and scanable documentation.</p><div class="tags"><span>systems</span><span>docs</span><span>ai workflow</span></div></article>`).join("")}
+          </div>`,
+        craft: `${header("CRAFT LAB","diy projects and finished works")}
+          <div class="materials">
+            ${[
+              ["glass","Fused Glass Study","materials/glass-field.svg"],["wire","Copper Signal Loom","materials/wire-field.svg"],["fabric","Soft Diffusion Cloth","materials/fabric-field.svg"],["paper","Ash Paper Index","materials/paper-field.svg"],["resin","Resin Memory Node","materials/resin-field.svg"],["stone","Stone Circuit Object","materials/stone-field.svg"]
+            ].map(([type,title,img])=>`<article class="material"><img src="../public/${img}" alt=""><div><span>${type}</span><h2>${title}</h2><p>material particles collapse into object grid</p></div></article>`).join("")}
+          </div>`,
+        life: `${header("LIFE LAB","daily life records")}
+          <div class="memory">
+            ${[
+              ["2026.06.30","07:18","Morning light on the desk edge"],["2026.06.24","23:42","Late diagram after a long call"],["2026.05.19","16:06","A material sample became a map"],["2026.04.03","09:51","Notes from a train window"]
+            ].map(([date,time,title],i)=>`<article style="margin-left:${i%2?42:0}px"><time><span>${date}</span><small>${time}</small></time><div><h2>${title}</h2><p>The timeline should feel like distance, not a stack.</p></div></article>`).join("")}
+          </div>`
+      };
+    </script>
+  </body>
+</html>

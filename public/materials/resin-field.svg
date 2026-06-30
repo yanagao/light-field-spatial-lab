@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Abstract resin node material study">
+  <defs>
+    <radialGradient id="r" cx=".52" cy=".42">
+      <stop offset="0" stop-color="#ffe7af"/>
+      <stop offset=".46" stop-color="#c78242"/>
+      <stop offset="1" stop-color="#25140a"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="1100" fill="#0d0906"/>
+  <ellipse cx="456" cy="530" rx="302" ry="426" fill="url(#r)" opacity=".88"/>
+  <path d="M250 364 640 232 548 742z" fill="#fff1ca" opacity=".22"/>
+  <path d="M348 812 702 622 592 902z" fill="#3e2111" opacity=".34"/>
+  <circle cx="390" cy="442" r="54" fill="#fff6da" opacity=".48"/>
+</svg>

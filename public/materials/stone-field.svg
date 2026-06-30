@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Abstract stone circuit material study">
+  <rect width="900" height="1100" fill="#0d0f0f"/>
+  <path d="M206 208c118-126 374-140 504-18 118 112 120 402 0 576-120 172-362 226-510 78-152-150-130-490 6-636z" fill="#65645e"/>
+  <path d="M258 300c122-80 268-100 404-22 112 64 142 216 96 352-42 126-140 226-292 244" fill="none" stroke="#b8b2a4" stroke-width="16" opacity=".36"/>
+  <path d="M154 824c190-72 266-190 312-340 42-138 120-226 288-252" fill="none" stroke="#ffc16b" stroke-width="8"/>
+  <circle cx="466" cy="484" r="20" fill="#ffd692"/>
+</svg>

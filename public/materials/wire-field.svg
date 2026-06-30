@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Abstract copper wire material study">
+  <rect width="900" height="1100" fill="#130b07"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M104 956C306 710 226 498 430 310c144-132 268-120 366-232" stroke="#ffb15e" stroke-width="18" opacity=".76"/>
+    <path d="M54 738c214-24 326-130 420-250 108-138 170-262 340-304" stroke="#ffd39b" stroke-width="5" opacity=".82"/>
+    <path d="M172 1044c188-188 310-188 372-410 42-150 106-246 260-342" stroke="#7a391b" stroke-width="42" opacity=".42"/>
+  </g>
+  <g fill="#ffe1b9">
+    <circle cx="196" cy="842" r="18"/>
+    <circle cx="444" cy="484" r="12"/>
+    <circle cx="700" cy="200" r="16"/>
+  </g>
+</svg>

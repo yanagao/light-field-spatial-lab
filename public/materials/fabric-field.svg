@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Abstract woven fabric material study">
+  <rect width="900" height="1100" fill="#17130f"/>
+  <g opacity=".8">
+    <path d="M0 130c180 74 300 74 450 0s270-74 450 0v970H0z" fill="#6f4f3f"/>
+    <path d="M0 260c210 58 310 58 450 0s240-58 450 0" fill="none" stroke="#f0c39f" stroke-width="28" opacity=".56"/>
+    <path d="M0 420c210 58 310 58 450 0s240-58 450 0" fill="none" stroke="#bd8c70" stroke-width="22" opacity=".72"/>
+  </g>
+  <g stroke="#f7ddc5" opacity=".24">
+    <path d="M120 0v1100"/>
+    <path d="M244 0v1100"/>
+    <path d="M386 0v1100"/>
+    <path d="M536 0v1100"/>
+    <path d="M706 0v1100"/>
+  </g>
+</svg>
