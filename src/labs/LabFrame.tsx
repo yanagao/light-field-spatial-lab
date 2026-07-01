@@ -9,6 +9,7 @@ interface LabFrameProps {
   children: ReactNode;
 }
 
+
 export function LabFrame({ labId, children }: LabFrameProps) {
   const returnHome = useSpatialStore((state) => state.returnHome);
   const lab = labs.find((item) => item.id === labId)!;

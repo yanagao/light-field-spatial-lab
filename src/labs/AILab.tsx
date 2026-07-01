@@ -7,9 +7,9 @@ function AILab() {
     <LabFrame labId="ai">
       <section className="ai-layout">
         <aside className="ai-index">
-          <span>DocLayoutEngine</span>
-          <strong>structured reading grid</strong>
-          <p>Directional light has collapsed into hierarchy, metadata, and article surfaces.</p>
+          <span>FrontendNotes</span>
+          <strong>Frontend engineering notes</strong>
+          <p>整理日常开发里的组件设计、交互状态、页面结构和交付经验。</p>
         </aside>
 
         <div className="article-list">

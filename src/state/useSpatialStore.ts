@@ -17,6 +17,7 @@ interface SpatialState {
   isTransitioning: boolean;
   focusedLab: LabId | null;
   navigateTo: (lab: LabId) => void;
+  openAbout: () => void;
   returnHome: () => void;
   setFocusedLab: (lab: LabId | null) => void;
 }
@@ -35,6 +36,21 @@ export const useSpatialStore = create<SpatialState>((set, get) => ({
   isTransitioning: false,
   focusedLab: null,
   setFocusedLab: (lab) => set({ focusedLab: lab }),
+  openAbout: () => {
+    const current = get();
+    if (current.isTransitioning || current.appState !== AppState.HOME_LIGHT_FIELD) {
+      return;
+    }
+
+    clearActiveTimers();
+    set({
+      appState: AppState.ABOUT_STATE,
+      selectedLab: null,
+      focusedLab: null,
+      transitionPhase: "idle",
+      isTransitioning: false
+    });
+  },
   navigateTo: (lab) => {
     const current = get();
     if (current.isTransitioning || current.appState !== AppState.HOME_LIGHT_FIELD) {
