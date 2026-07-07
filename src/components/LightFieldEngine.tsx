@@ -148,24 +148,41 @@ function CraftField(props: FieldPreviewProps) {
         }
         transition={{ duration: 0.58, ease: [0.2, 0.9, 0.22, 1] }}
       />
-      <span className="craft-table-shadow" aria-hidden="true" />
-      <span className="craft-photo-cluster" aria-hidden="true">
-        <i className="craft-photo-fragment glass-lamp-photo" />
-        <i className="craft-photo-fragment glass-shard-photo" />
-        <i className="craft-photo-fragment fabric-weave-photo" />
-        <i className="craft-photo-fragment fabric-edge-photo" />
-        <i className="craft-photo-fragment copper-thread-photo" />
-        <i className="craft-photo-fragment thread-spool-photo" />
-        <i className="craft-photo-fragment work-preview-photo primary-work" />
-        <i className="craft-photo-fragment work-preview-photo secondary-work" />
-        <i className="craft-photo-fragment workbench-photo" />
-      </span>
-      <span className="craft-caustic-wash" aria-hidden="true"><i /><i /><i /></span>
+      <motion.span
+        className="craft-flame-field"
+        aria-hidden="true"
+        initial={false}
+        animate={
+          bumpCount > 0
+            ? {
+                scale: [1, 1.08, 1.02],
+                y: [0, -4, 0],
+                filter: [
+                  "brightness(1.06) saturate(1.14)",
+                  "brightness(1.36) saturate(1.34)",
+                  "brightness(1.16) saturate(1.2)"
+                ]
+              }
+            : { scale: 1, y: 0, filter: "brightness(1.06) saturate(1.14)" }
+        }
+        transition={{ duration: 0.72, ease: [0.2, 0.9, 0.22, 1] }}
+      >
+        <i />
+        <i />
+        <b />
+      </motion.span>
+      <span className="craft-glass-hint" aria-hidden="true" />
+      <span className="craft-rod-trace" aria-hidden="true" />
+      <svg className="craft-process-curves" viewBox="0 0 220 190" aria-hidden="true">
+        <path d="M43 116 C82 83 122 92 167 61" />
+        <path d="M62 136 C102 158 133 124 181 119" />
+      </svg>
       <span className="field-brackets craft-brackets" aria-hidden="true"><i /><i /><i /><i /></span>
       <span className="field-kicker">CRAFT FIELD</span>
       <span className="source-label">
         <span>{lab.name}</span>
         <small>material field</small>
+        <small>glass / flame / process</small>
         <em>ENTER MATERIAL FIELD</em>
       </span>
       <DwellTrace active={dwellActive} progress={dwellProgress} />

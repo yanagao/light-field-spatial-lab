@@ -12,11 +12,11 @@ const phaseLabels: Record<LabId, Partial<Record<TransitionPhase, string>>> = {
     "ui-mount": "mounting index"
   },
   craft: {
-    "light-bias": "warm diffusion",
-    "field-distortion": "glass refraction",
-    collapse: "material fracture",
-    "structure-emergence": "field assembly",
-    "ui-mount": "mounting media"
+    "light-bias": "flame bias",
+    "field-distortion": "heat shimmer",
+    collapse: "flame lock",
+    "structure-emergence": "glass trace",
+    "ui-mount": "mounting field"
   },
   life: {
     "light-bias": "soft field bias",
@@ -28,18 +28,6 @@ const phaseLabels: Record<LabId, Partial<Record<TransitionPhase, string>>> = {
 };
 
 const structureLines = Array.from({ length: 9 }, (_, index) => index);
-const materialFragments = [
-  { key: "glass-a", kind: "glass", className: "fragment-glass glass-a" },
-  { key: "glass-b", kind: "glass", className: "fragment-glass glass-b" },
-  { key: "glass-lamp", kind: "glass", className: "fragment-glass glass-lamp" },
-  { key: "fabric-a", kind: "fabric", className: "fragment-fabric fabric-a" },
-  { key: "fabric-b", kind: "fabric", className: "fragment-fabric fabric-b" },
-  { key: "wire-a", kind: "wire", className: "fragment-wire wire-a" },
-  { key: "wire-b", kind: "wire", className: "fragment-wire wire-b" },
-  { key: "media-a", kind: "media", className: "fragment-media media-a" },
-  { key: "media-b", kind: "media", className: "fragment-media media-b" },
-  { key: "process-note", kind: "process", className: "fragment-process process-note" }
-];
 const timeStreams = Array.from({ length: 7 }, (_, index) => index);
 
 export function TransitionController() {
@@ -55,8 +43,8 @@ export function TransitionController() {
         }
       : lab.id === "craft"
         ? {
-            scaleX: phase === "collapse" || phase === "structure-emergence" ? 4.8 : 1.7,
-            scaleY: phase === "field-distortion" ? 1.7 : 1,
+            scaleX: phase === "collapse" || phase === "structure-emergence" ? 0.72 : 0.42,
+            scaleY: phase === "field-distortion" ? 1.22 : 1,
             opacity: phase === "ui-mount" ? 0.16 : 0.9
           }
         : {
@@ -92,24 +80,14 @@ export function TransitionController() {
           )}
 
           {lab.id === "craft" && (
-            <div className="collapse-material" aria-hidden="true">
-              {materialFragments.map((fragment) =>
-                fragment.kind === "wire" ? (
-                  <svg
-                    key={fragment.key}
-                    className={`material-fragment ${fragment.className}`}
-                    viewBox="0 0 180 92"
-                    preserveAspectRatio="none"
-                  >
-                    <path d="M8 68 C 42 18, 72 86, 104 42 S 146 18, 172 54" />
-                    <path className="wire-shadow" d="M10 73 C 44 27, 76 84, 106 48 S 146 26, 170 58" />
-                  </svg>
-                ) : (
-                  <span key={fragment.key} className={`material-fragment ${fragment.className}`}>
-                    <i />
-                  </span>
-                )
-              )}
+            <div className="collapse-flame" aria-hidden="true">
+              <span className="collapse-flame-glow" />
+              <span className="collapse-flame-core" />
+              <span className="collapse-flame-glass" />
+              <svg className="collapse-flame-traces" viewBox="0 0 280 220" preserveAspectRatio="none">
+                <path d="M64 134 C112 82 158 103 216 59" />
+                <path d="M79 157 C132 186 171 135 227 134" />
+              </svg>
             </div>
           )}
 
