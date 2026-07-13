@@ -11,5 +11,10 @@ export function resolveContentAsset(labId: string, src?: string) {
   if (/^(https?:)?\/\//.test(src) || src.startsWith("data:")) return src;
 
   const normalized = src.replace(/^\.\//, "");
-  return contentAssetFiles[`../../content/${labId}/${normalized}`] || src;
+  const candidates = [
+    `../../content/${labId}/${normalized}`,
+    `../../content/${labId}/assets/${normalized}`
+  ];
+
+  return candidates.map((path) => contentAssetFiles[path]).find(Boolean) || src;
 }
