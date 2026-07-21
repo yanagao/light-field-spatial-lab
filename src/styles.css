@@ -1723,7 +1723,18 @@ button {
   display: grid;
   gap: 8px;
   margin: 0;
-  padding-left: 1.2em;
+  padding-left: 1.35em;
+  list-style: disc;
+  list-style-position: outside;
+}
+
+.markdown-body li {
+  padding-left: 0.25em;
+}
+
+.markdown-body li::marker {
+  color: rgba(247, 240, 223, 0.82);
+  font-size: 0.78em;
 }
 
 .markdown-body a {
