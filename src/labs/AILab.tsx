@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { MarkdownDetail } from "../components/MarkdownDetail";
 import { aiArticles } from "../data/aiArticles";
 import { resolveContentAsset } from "../data/contentAssets";
+import { useArticleRoute } from "../hooks/useArticleRoute";
 import { LabFrame } from "./LabFrame";
 
 function AILab() {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { selectedId, openArticle, closeArticle } = useArticleRoute("ai");
   const selectedArticle = aiArticles.find((article) => article.id === selectedId);
 
   return (
@@ -19,7 +19,7 @@ function AILab() {
           summary={selectedArticle.summary}
           meta={[selectedArticle.readTime, ...selectedArticle.tags]}
           body={selectedArticle.body}
-          onBack={() => setSelectedId(null)}
+          onBack={closeArticle}
           resolveAsset={(src) => resolveContentAsset("ai", src)}
         />
       ) : (
@@ -36,7 +36,7 @@ function AILab() {
                 key={article.id}
                 className="article-card lab-list-button"
                 type="button"
-                onClick={() => setSelectedId(article.id)}
+                onClick={() => openArticle(article.id)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.48, delay: index * 0.07, ease: [0.12, 0.8, 0.2, 1] }}

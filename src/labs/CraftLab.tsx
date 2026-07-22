@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { MarkdownDetail } from "../components/MarkdownDetail";
 import { craftNotes } from "../data/craftNotes";
 import { resolveContentAsset } from "../data/contentAssets";
+import { useArticleRoute } from "../hooks/useArticleRoute";
 import { LabFrame } from "./LabFrame";
 
 function CraftLab() {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { selectedId, openArticle, closeArticle } = useArticleRoute("craft");
   const selectedNote = craftNotes.find((note) => note.id === selectedId);
 
   return (
@@ -19,7 +19,7 @@ function CraftLab() {
           summary={selectedNote.medium}
           body={selectedNote.body}
           heroImage={selectedNote.image}
-          onBack={() => setSelectedId(null)}
+          onBack={closeArticle}
           resolveAsset={(src) => resolveContentAsset("craft", src)}
         />
       ) : (
@@ -29,7 +29,7 @@ function CraftLab() {
               key={material.id}
               className={`material-node lab-list-button ${material.image ? "" : "is-text-only"}`}
               type="button"
-              onClick={() => setSelectedId(material.id)}
+              onClick={() => openArticle(material.id)}
               initial={{ opacity: 0, scale: 0.94, y: 26 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{

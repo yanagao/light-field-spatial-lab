@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { AppState, type LabId, type TransitionPhase } from "../types";
 import { labs } from "../data/content";
+import { getLabFromLocation, updateHashRoute } from "../routing";
 
 const phaseDurations: Array<{ phase: TransitionPhase; duration: number }> = [
   { phase: "light-bias", duration: 520 },
@@ -41,18 +42,16 @@ const getLocationState = (): Pick<SpatialState, "appState" | "selectedLab"> => {
     return { appState: AppState.ABOUT_STATE, selectedLab: null };
   }
 
-  if (route === "ai" || route === "craft" || route === "life") {
-    return { appState: labRouteStates[route], selectedLab: route };
+  const lab = getLabFromLocation();
+  if (lab) {
+    return { appState: labRouteStates[lab], selectedLab: lab };
   }
 
   return { appState: AppState.HOME_LIGHT_FIELD, selectedLab: null };
 };
 
 const pushRoute = (route: string) => {
-  const nextHash = `#/${route}`;
-  if (window.location.hash !== nextHash) {
-    window.history.pushState(null, "", nextHash);
-  }
+  updateHashRoute(route ? [route] : []);
 };
 
 const clearActiveTimers = () => {
