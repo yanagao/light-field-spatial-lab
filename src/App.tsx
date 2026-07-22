@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LightFieldEngine } from "./components/LightFieldEngine";
 import { TransitionController } from "./components/TransitionController";
@@ -12,6 +12,19 @@ const LifeLab = lazy(() => import("./labs/LifeLab"));
 
 function App() {
   const appState = useSpatialStore((state) => state.appState);
+  const syncFromLocation = useSpatialStore((state) => state.syncFromLocation);
+
+  useEffect(() => {
+    const handleLocationChange = () => syncFromLocation();
+
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+    };
+  }, [syncFromLocation]);
 
   return (
     <main className="app-shell">
